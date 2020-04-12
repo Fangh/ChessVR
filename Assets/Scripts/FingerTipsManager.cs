@@ -9,6 +9,9 @@ public class FingerTipsManager : MonoBehaviour
     [SerializeField] private GameObject fingerTipPrefab;
     [SerializeField] private GameObject pinchColliderPrefab;
 
+    [Header("Settings")]
+    [SerializeField] private float pinchSize = 0.01f;
+
     private Transform indexTip;
     private Transform thumbTip;
     private bool isPinching = true;
@@ -57,7 +60,7 @@ public class FingerTipsManager : MonoBehaviour
             Debug.Log($"Start pinching");
             isPinching = true;
             Vector3 thumbIndexVector = indexTip.position - thumbTip.position;
-            Collider[] cols = Physics.OverlapSphere(thumbTip.position + thumbIndexVector * 0.5f, 0.02f);
+            Collider[] cols = Physics.OverlapSphere(thumbTip.position + thumbIndexVector * 0.5f, pinchSize);
             foreach (Collider c in cols)
             {
                 IGrabbable grabbable = c.GetComponent<IGrabbable>();

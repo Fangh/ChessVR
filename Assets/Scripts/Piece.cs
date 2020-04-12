@@ -18,22 +18,22 @@ public class Piece : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        originalPos = rigidbody.transform.localPosition;
-        originalRot = rigidbody.transform.localRotation;
+        //originalPos = rigidbody.transform.localPosition;
+        //originalRot = rigidbody.transform.localRotation;
     }
 
     // Update is called once per frame
     public void StopPhysics()
     {
         rigidbody.isKinematic = true;
-        transform.localPosition = originalPos;
-        transform.localRotation = originalRot;
+        //transform.localPosition = originalPos;
+        //transform.localRotation = originalRot;
     }
 
     public void ResumePhysics()
     {
-        transform.localPosition = originalPos;
-        transform.localRotation = originalRot;
+        //originalPos = rigidbody.transform.localPosition;
+        //originalRot = rigidbody.transform.localRotation;
         rigidbody.isKinematic = false;
     }
 
@@ -44,5 +44,10 @@ public class Piece : MonoBehaviour
         Vector3 meToTargetVector = _pos - rigidbody.transform.position;
         rigidbody.transform.rotation = Quaternion.FromToRotation(Vector3.up, meToTargetVector);
         rigidbody.transform.position = Vector3.SmoothDamp(rigidbody.transform.position, targetPos, ref velocity, followSmoothiness);
+    }
+
+    public void SetModel(GameObject _model)
+    {
+        Instantiate(_model, rigidbody.transform);
     }
 }

@@ -26,7 +26,7 @@ public class GrabSphere : MonoBehaviour, IGrabbable
     {
         constraint.enabled = false;
         piece.StopPhysics();
-        meshRenderer.material.color = grabbedColor;
+        meshRenderer.material.SetColor("_BaseColor", grabbedColor);
         Debug.Log($"{piece.gameObject.name} is grabbed", this);
     }
 
@@ -40,7 +40,7 @@ public class GrabSphere : MonoBehaviour, IGrabbable
     {
         constraint.enabled = true;
         piece.ResumePhysics();
-        meshRenderer.material.color = ungrabbedColor;
+        meshRenderer.material.SetColor("_BaseColor", ungrabbedColor);
         Debug.Log($"{piece.gameObject.name} is ungrabbed", this);
     }
 

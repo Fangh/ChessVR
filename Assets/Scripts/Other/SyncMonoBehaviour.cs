@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,10 +16,12 @@ public class SyncMonoBehaviour : MonoBehaviour, ITransformSync
     private Vector3 lastPos;
     private Quaternion lastRot;
     private Vector3 lastScale;
-
-    private void Awake()
+    
+    //only for object created through the editor;
+    void Reset()
     {
-        GUID = GetInstanceID().ToString();
+        GUID = Guid.NewGuid().ToString();
+        Debug.Log($"Setting GUID({GUID}) to {name}");
     }
 
     public void InitializeMyGUID(string _GUID)

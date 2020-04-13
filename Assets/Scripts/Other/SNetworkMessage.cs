@@ -19,9 +19,13 @@ public struct SNetworkMessage
 public enum EMessageType
 {
     Unknown,
-    UpdateHand,
     UpdateTransform,
-    Instantiate
+    Instantiate,
+
+    //only for Chess
+    Grab,
+    Ungrab,
+    UpdateHand,
 }
 
 
@@ -58,3 +62,4 @@ public struct SMessageUpdateTransform
         scale = _scale;
     }
 }
+

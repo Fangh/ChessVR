@@ -25,7 +25,7 @@ public class PiecesSpawner : MonoBehaviour
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             InitPieces();
         }
@@ -53,9 +53,15 @@ public class PiecesSpawner : MonoBehaviour
     private void ConfigurePiece(GameObject piece)
     {
         if (index < 16)
+        {
             piece.GetComponent<Piece>().SetModel(whiteModels.Find(w => w.index == index).model);
+            piece.name = $"Piece.{whiteModels.Find(w => w.index == index).model.name}";
+        }
         else
+        {
             piece.GetComponent<Piece>().SetModel(blackModels.Find(b => b.index == index).model);
+            piece.name = $"Piece.{blackModels.Find(b => b.index == index).model.name}";
+        }
         index++;
     }
 }

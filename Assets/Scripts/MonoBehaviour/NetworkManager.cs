@@ -100,6 +100,12 @@ public class NetworkManager : MonoBehaviour
         {
             SendNetworkMessageToAllClients(_message);
         }
+
+        //only for Chess
+        if(_message.type == EMessageType.Grab || _message.type == EMessageType.Ungrab)
+        {
+            SendNetworkMessageToAllClients(_message);
+        }
     }
 
     private void ReceiveClientMessages()
@@ -145,6 +151,16 @@ public class NetworkManager : MonoBehaviour
             SMessageUpdateTransform msg = JsonUtility.FromJson<SMessageUpdateTransform>(_message.JSON);
             NetworkSynchronizer.Instance.SyncDown(msg.GUID, msg.position, msg.rotation, msg.scale);
             return;
+        }
+
+        //only for Chess
+        if(_message.type == EMessageType.Grab)
+        {
+            NetworkSynchronizer.Instance.GetSMBByGUID(_message.JSON).GetComponent<GrabSphere>().Grab();
+        }
+        if (_message.type == EMessageType.Ungrab)
+        {
+            NetworkSynchronizer.Instance.GetSMBByGUID(_message.JSON).GetComponent<GrabSphere>().UnGrab();
         }
     }
 

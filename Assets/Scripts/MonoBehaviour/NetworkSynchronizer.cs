@@ -45,4 +45,9 @@ public class NetworkSynchronizer : MonoBehaviour
         synchronizedObjects[_GUID].SyncTransform(_position, _rotation, _scale);
     }
 
+    public SyncMonoBehaviour GetSMBByGUID(string _GUID)
+    {
+        return synchronizedObjects[_GUID];
+    }
+
 }

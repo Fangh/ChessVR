@@ -4,7 +4,7 @@ using UnityEngine;
 
 public interface IGrabbable
 {
-    void Grab();
+    void StartGrab();
     void UpdateGrab(Vector3 _pos);
-    void UnGrab();
+    void StopGrab();
 }

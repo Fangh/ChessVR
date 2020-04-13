@@ -66,7 +66,7 @@ public class FingerTipsManager : MonoBehaviour
                 IGrabbable grabbable = c.GetComponent<IGrabbable>();
                 if (grabbable != null)
                 {
-                    grabbable.Grab();
+                    grabbable.StartGrab();
                     grabbedObjects.Add(grabbable);
                 }
             }
@@ -81,7 +81,7 @@ public class FingerTipsManager : MonoBehaviour
             isPinching = false;
             foreach (IGrabbable g in grabbedObjects)
             {
-                g.UnGrab();
+                g.StopGrab();
             }
             grabbedObjects = new List<IGrabbable>();
         }

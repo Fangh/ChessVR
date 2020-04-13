@@ -27,6 +27,11 @@ public class GrabSphere : SyncMonoBehaviour, IGrabbable
         constraint.AddSource(source);
     }
 
+    public void StartGrab()
+    {
+        NetworkManager.Instance.SendNetworkMessageToServer(new SNetworkMessage(EMessageType.Grab, GUID));
+    }
+
     public void Grab()
     {
         constraint.enabled = false;
@@ -41,6 +46,11 @@ public class GrabSphere : SyncMonoBehaviour, IGrabbable
         piece.FollowPinch(_pos);
     }
 
+    public void StopGrab()
+    {
+        NetworkManager.Instance.SendNetworkMessageToServer(new SNetworkMessage(EMessageType.Ungrab, GUID));
+    }
+
     public void UnGrab()
     {
         constraint.enabled = true;
@@ -51,11 +61,6 @@ public class GrabSphere : SyncMonoBehaviour, IGrabbable
 
     public override void SyncTransform(Vector3 _position, Quaternion _rotation, Vector3 _scale)
     {
-        constraint.enabled = false;
-        piece.StopPhysics();
         base.SyncTransform(_position, _rotation, _scale);
-        //constraint.enabled = true;
-        //piece.ResumePhysics();
     }
-
 }

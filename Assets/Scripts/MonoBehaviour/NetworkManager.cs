@@ -17,6 +17,11 @@ public class NetworkManager : MonoBehaviour
 
     public static NetworkManager Instance;
 
+    public bool isServer = false;
+    public static event Action<GameObject> OnInstantiate;
+    public static event Action OnServerStarted;
+    public static event Action OnClientStarted;
+
     void Awake()
     {
         Instance = this;
@@ -38,13 +43,7 @@ public class NetworkManager : MonoBehaviour
         if(client != null)
             client.Disconnect();
         if(server != null)
-        server.Stop();
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-
+            server.Stop();
     }
 
     // Update is called once per frame
@@ -112,6 +111,7 @@ public class NetworkManager : MonoBehaviour
             {
                 case Telepathy.EventType.Connected:
                     Debug.Log(msg.connectionId + " Connected");
+                    OnClientStarted?.Invoke();
                     break;
                 case Telepathy.EventType.Disconnected:
                     Debug.Log(msg.connectionId + " Disconnected");
@@ -176,6 +176,11 @@ public class NetworkManager : MonoBehaviour
             Debug.LogError("You tried to instantiate a Game Object without a GUID");
             return;
         }
+        if(Resources.Load<GameObject>(_prefabName) == null)
+        {
+            Debug.LogError($"Can't find any {_prefabName} prefab in the Resources Folder");
+            return;
+        }
 
         GameObject instance = Instantiate(Resources.Load<GameObject>(_prefabName), _position, _rotation, _parent) as GameObject;
         SyncMonoBehaviour SMB = instance.GetComponent<SyncMonoBehaviour>();
@@ -188,8 +193,8 @@ public class NetworkManager : MonoBehaviour
         }
 
         SMB.InitializeGUIDFromServer(_GUID);
-
         NetworkSynchronizer.Instance.AddSynchronizeObject(SMB);
+        OnInstantiate?.Invoke(SMB.gameObject);
     }
 
     /// <summary>
@@ -204,15 +209,20 @@ public class NetworkManager : MonoBehaviour
         SendNetworkMessageToServer(new SNetworkMessage(EMessageType.Instantiate, JsonUtility.ToJson(new SMessageInstantiate(_prefabName, _position, _rotation, _parent))));
     }
 
+    [ContextMenu("Start Server")]
     public void StartServer()
     {
         server = new Telepathy.Server();
         server.Start(4242);
+        isServer = true;
+        OnServerStarted?.Invoke();
     }
 
+    [ContextMenu("Start Client")]
     public void StartClient()
     {
         client = new Telepathy.Client();
         client.Connect(serverIP, 4242);
+
     }
 }

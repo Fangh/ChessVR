@@ -12,28 +12,43 @@ public class PiecesSpawner : MonoBehaviour
     [SerializeField] private List<ModelByIndex> whiteModels = new List<ModelByIndex>();
     [SerializeField] private List<ModelByIndex> blackModels = new List<ModelByIndex>();
 
+    private List<Piece> whitePieces = new List<Piece>();
+    private List<Piece> blackPieces = new List<Piece>();
+
 
     // Start is called before the first frame update
     void Start()
     {
-        SpawnPieces(bottomLeftP1, true);
-        SpawnPieces(bottomLeftP2, false);
+        NetworkManager.OnInstantiate += ConfigurePiece;
+        NetworkManager.OnClientStarted += InitPieces;
     }
 
-    private void SpawnPieces(Transform _bottomLeft, bool _white)
+    private void InitPieces()
     {
-        int index = 0;
+        SpawnPieces(bottomLeftP1);
+        SpawnPieces(bottomLeftP2);
+    }
+
+    private void SpawnPieces(Transform _bottomLeft)
+    {
         for (int y = 0; y < 2; y++)
         {
             for (int x = 0; x < 8; x++)
             {
-                GameObject go = Instantiate(piecePrefab, _bottomLeft);
-                go.transform.localPosition = new Vector3(tileSize * 0.5f + tileSize * x, tileSize * 0.5f + tileSize * y, 0);
-                go.transform.rotation = Quaternion.identity;
-                go.GetComponent<Piece>().SetModel(_white ? whiteModels.Find(w => w.index == index).model : blackModels.Find(b => b.index == index).model);
-                index++;
+                Vector3 position = new Vector3(_bottomLeft.position.x + tileSize * 0.5f + tileSize * x, _bottomLeft.position.y, _bottomLeft.position.z + tileSize * 0.5f + tileSize * y);
+                NetworkManager.Instance.Instantiate(piecePrefab.name, position, Quaternion.identity, _bottomLeft);
             }
         }
+    }
+
+    int index = 0;
+    private void ConfigurePiece(GameObject piece)
+    {
+        if (index < 16)
+            piece.GetComponent<Piece>().SetModel(whiteModels.Find(w => w.index == index).model);
+        else
+            piece.GetComponent<Piece>().SetModel(blackModels.Find(b => b.index == index).model);
+        index++;
     }
 }
 

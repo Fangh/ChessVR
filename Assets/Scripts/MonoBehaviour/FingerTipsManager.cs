@@ -14,7 +14,7 @@ public class FingerTipsManager : MonoBehaviour
 
     private Transform indexTip;
     private Transform thumbTip;
-    private bool isPinching = true;
+    private bool isPinching = false;
 
     private List<IGrabbable> grabbedObjects = new List<IGrabbable>();
 

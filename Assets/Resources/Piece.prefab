@@ -71,6 +71,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3107976326670808873}
   - component: {fileID: 3107976326670808872}
+  - component: {fileID: 8352895383981522058}
   m_Layer: 0
   m_Name: Piece
   m_TagString: Untagged
@@ -109,6 +110,19 @@ MonoBehaviour:
   rigidbody: {fileID: 3107976326457278109}
   followSmoothiness: 0.05
   sphereOffset: {x: 0, y: -0.07, z: 0}
+--- !u!114 &8352895383981522058
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3107976326670808878}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e7a09412b641fc44931785fc91f07bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GUID: 9da7a600-5856-4ce1-ac01-5941d57172f4
 --- !u!1 &3107976327757632503
 GameObject:
   m_ObjectHideFlags: 0

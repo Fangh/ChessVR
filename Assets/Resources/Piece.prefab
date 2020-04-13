@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 5435922561354187845}
   - component: {fileID: 5435922561354187867}
   - component: {fileID: 3107976326670808872}
-  - component: {fileID: 8352895383981522058}
   - component: {fileID: 7832455969791956257}
   m_Layer: 0
   m_Name: Piece
@@ -65,6 +64,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fcdf641020061674b996afdfd727abb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GUID: 09a65568-20a7-4549-b8cc-a2ae37453281
   piece: {fileID: 3107976326670808872}
   constraint: {fileID: 5435922561354187845}
   meshRenderer: {fileID: 6931593410145052153}
@@ -85,19 +85,6 @@ MonoBehaviour:
   model: {fileID: 0}
   followSmoothiness: 0.05
   sphereOffset: {x: 0, y: -0.07, z: 0}
---- !u!114 &8352895383981522058
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3107976326670808878}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e7a09412b641fc44931785fc91f07bd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GUID: 9da7a600-5856-4ce1-ac01-5941d57172f4
 --- !u!135 &7832455969791956257
 SphereCollider:
   m_ObjectHideFlags: 0

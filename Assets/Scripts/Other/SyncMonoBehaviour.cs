@@ -12,6 +12,7 @@ public class SyncMonoBehaviour : MonoBehaviour, ITransformSync
     private Vector3 lastScale;
     
     //only for object created through the editor;
+    [ContextMenu("Reset GUID")]
     void Reset()
     {
         if(string.IsNullOrEmpty(GUID))

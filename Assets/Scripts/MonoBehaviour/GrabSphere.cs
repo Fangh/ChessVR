@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Animations;
 
-public class GrabSphere : MonoBehaviour, IGrabbable
+public class GrabSphere : SyncMonoBehaviour, IGrabbable
 {
     [Header("References")]
     [SerializeField] private Piece piece;
@@ -47,6 +47,15 @@ public class GrabSphere : MonoBehaviour, IGrabbable
         piece.ResumePhysics();
         meshRenderer.material.SetColor("_BaseColor", ungrabbedColor);
         Debug.Log($"{piece.gameObject.name} is ungrabbed", this);
+    }
+
+    public override void SyncTransform(Vector3 _position, Quaternion _rotation, Vector3 _scale)
+    {
+        constraint.enabled = false;
+        piece.StopPhysics();
+        base.SyncTransform(_position, _rotation, _scale);
+        constraint.enabled = true;
+        piece.ResumePhysics();
     }
 
 }

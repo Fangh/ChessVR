@@ -48,7 +48,7 @@ public class FingerTipsManager : MonoBehaviour
             Vector3 middle = thumbTip.position + (indexTip.position - thumbTip.position) * 0.5f;
             foreach (IGrabbable g in grabbedObjects)
             {
-                g.UpdateGrab(middle);
+                g.SyncUpGrab(middle);
             }
         }
     }

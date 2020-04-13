@@ -102,7 +102,7 @@ public class NetworkManager : MonoBehaviour
         }
 
         //only for Chess
-        if(_message.type == EMessageType.Grab || _message.type == EMessageType.Ungrab)
+        if(_message.type == EMessageType.Grab || _message.type == EMessageType.Ungrab || _message.type == EMessageType.UpdateGrab)
         {
             SendNetworkMessageToAllClients(_message);
         }
@@ -161,6 +161,11 @@ public class NetworkManager : MonoBehaviour
         if (_message.type == EMessageType.Ungrab)
         {
             NetworkSynchronizer.Instance.GetSMBByGUID(_message.JSON).GetComponent<GrabSphere>().UnGrab();
+        }
+        if (_message.type == EMessageType.UpdateGrab)
+        {
+            SMessaveVector3 msg = JsonUtility.FromJson<SMessaveVector3>(_message.JSON);
+            NetworkSynchronizer.Instance.GetSMBByGUID(msg.GUID).GetComponent<GrabSphere>().SyncDownGrab(msg.vector);
         }
     }
 

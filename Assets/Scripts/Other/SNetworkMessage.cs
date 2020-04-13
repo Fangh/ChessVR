@@ -25,6 +25,7 @@ public enum EMessageType
     //only for Chess
     Grab,
     Ungrab,
+    UpdateGrab,
     UpdateHand,
 }
 
@@ -60,6 +61,18 @@ public struct SMessageUpdateTransform
         position = _position;
         rotation = _rotation;
         scale = _scale;
+    }
+}
+
+public struct SMessaveVector3
+{
+    public string GUID;
+    public Vector3 vector;
+
+    public SMessaveVector3(string _GUID, Vector3 _vector)
+    {
+        GUID = _GUID;
+        vector = _vector;
     }
 }
 

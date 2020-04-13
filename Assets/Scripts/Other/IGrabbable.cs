@@ -5,6 +5,6 @@ using UnityEngine;
 public interface IGrabbable
 {
     void StartGrab();
-    void UpdateGrab(Vector3 _pos);
+    void SyncUpGrab(Vector3 _pos);
     void StopGrab();
 }

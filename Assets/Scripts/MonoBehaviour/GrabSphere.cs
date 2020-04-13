@@ -40,7 +40,12 @@ public class GrabSphere : SyncMonoBehaviour, IGrabbable
         Debug.Log($"{piece.gameObject.name} is grabbed", this);
     }
 
-    public void UpdateGrab(Vector3 _pos)
+    public void SyncUpGrab(Vector3 _pos)
+    {
+        NetworkManager.Instance.SendNetworkMessageToServer(new SNetworkMessage(EMessageType.UpdateGrab, JsonUtility.ToJson(new SMessaveVector3(GUID, _pos))));
+    }
+
+    public void SyncDownGrab(Vector3 _pos)
     {
         transform.position = _pos;
         piece.FollowPinch(_pos);

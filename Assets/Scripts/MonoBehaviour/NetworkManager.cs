@@ -23,6 +23,8 @@ public class NetworkManager : MonoBehaviour
     public static event Action OnServerStarted;
     public static event Action OnClientStarted;
 
+    private int clientID = int.MinValue;
+
     void Awake()
     {
         Instance = this;
@@ -41,9 +43,9 @@ public class NetworkManager : MonoBehaviour
         // the client/server threads won't receive the OnQuit info if we are
         // running them in the Editor. they would only quit when we press Play
         // again later. this is fine, but let's shut them down here for consistency
-        if(client != null)
+        if (client != null)
             client.Disconnect();
-        if(server != null)
+        if (server != null)
             server.Stop();
     }
 
@@ -67,6 +69,7 @@ public class NetworkManager : MonoBehaviour
                 case Telepathy.EventType.Connected:
                     Debug.Log($"client {msg.connectionId} is Connected");
                     connectedClients.Add(msg.connectionId);
+                    SendNetworkMessageToClient(msg.connectionId, new SNetworkMessage(EMessageType.ConnectionSuccessful, msg.connectionId.ToString()));
                     break;
                 case Telepathy.EventType.Disconnected:
                     Debug.Log(msg.connectionId + " Disconnected");
@@ -96,14 +99,14 @@ public class NetworkManager : MonoBehaviour
             msg.GUID = Guid.NewGuid().ToString();
             SendNetworkMessageToAllClients(new SNetworkMessage(EMessageType.Instantiate, JsonUtility.ToJson(msg)));
         }
-        
-        if(_message.type == EMessageType.UpdateTransform)
+
+        if (_message.type == EMessageType.UpdateTransform)
         {
             SendNetworkMessageToAllClients(_message);
         }
 
         //only for Chess
-        if(_message.type == EMessageType.Grab || _message.type == EMessageType.Ungrab || _message.type == EMessageType.UpdateGrab || _message.type == EMessageType.UpdateHand)
+        if (_message.type == EMessageType.Grab || _message.type == EMessageType.Ungrab || _message.type == EMessageType.UpdateGrab || _message.type == EMessageType.UpdateHand)
         {
             SendNetworkMessageToAllClients(_message);
         }
@@ -141,6 +144,12 @@ public class NetworkManager : MonoBehaviour
             return;
         }
 
+        if (_message.type == EMessageType.ConnectionSuccessful)
+        {
+            clientID = int.Parse(_message.JSON);
+            Debug.Log($"The Server told me I'm client n°{clientID}");
+        }
+
         if (_message.type == EMessageType.Instantiate)
         {
             SMessageInstantiate msg = JsonUtility.FromJson<SMessageInstantiate>(_message.JSON);
@@ -148,7 +157,7 @@ public class NetworkManager : MonoBehaviour
             return;
         }
 
-        if(_message.type == EMessageType.UpdateTransform)
+        if (_message.type == EMessageType.UpdateTransform)
         {
             SMessageUpdateTransform msg = JsonUtility.FromJson<SMessageUpdateTransform>(_message.JSON);
             NetworkSynchronizer.Instance.SyncDown(msg.GUID, msg.position, msg.rotation, msg.scale);
@@ -156,7 +165,7 @@ public class NetworkManager : MonoBehaviour
         }
 
         //only for Chess
-        if(_message.type == EMessageType.Grab)
+        if (_message.type == EMessageType.Grab)
         {
             NetworkSynchronizer.Instance.GetSMBByGUID(_message.JSON).GetComponent<Piece>().Grab();
         }
@@ -203,7 +212,7 @@ public class NetworkManager : MonoBehaviour
             Debug.LogError("You tried to instantiate a Game Object without a GUID");
             return;
         }
-        if(Resources.Load<GameObject>(_prefabName) == null)
+        if (Resources.Load<GameObject>(_prefabName) == null)
         {
             Debug.LogError($"Can't find any {_prefabName} prefab in the Resources Folder");
             return;
@@ -211,7 +220,7 @@ public class NetworkManager : MonoBehaviour
 
         Debug.Log($"Instantiating {_prefabName} under {_parentName} at ({_position}), {_rotation}");
         Transform parent = null;
-        if(!string.IsNullOrEmpty(_parentName))
+        if (!string.IsNullOrEmpty(_parentName))
         {
             parent = GameObject.Find(_parentName).transform;
         }
@@ -258,5 +267,14 @@ public class NetworkManager : MonoBehaviour
         client = new Telepathy.Client();
         client.Connect(serverIP, 4242);
 
+    }
+
+    public int GetClientID()
+    {
+        if (clientID == int.MinValue)
+        {
+            Debug.LogError("You don't have a client ID given by the server !");
+        }
+        return clientID;
     }
 }

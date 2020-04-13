@@ -24,6 +24,7 @@ public enum EMessageType
     Unknown,
     UpdateTransform,
     Instantiate,
+    ConnectionSuccessful,
 
     //only for Chess
     Grab,
@@ -84,6 +85,7 @@ public struct SMessageVector3
 [System.Serializable]
 public struct SMessageHand
 {
+    public int ownerClientID;
     public int handType; //0 = left, 1 = right
     public List<SBone> bones;
     public Vector3 position;
@@ -91,6 +93,7 @@ public struct SMessageHand
 
     public SMessageHand(int _handType, List<SBone> _bones, Vector3 _pos, Quaternion _rot)
     {
+        ownerClientID = int.MinValue;
         handType = _handType;
         bones = _bones;
         position = _pos;

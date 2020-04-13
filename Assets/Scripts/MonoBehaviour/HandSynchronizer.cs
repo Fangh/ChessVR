@@ -35,6 +35,9 @@ public class HandSynchronizer : MonoBehaviour
 
     public void SyncHandDown(SMessageHand _data)
     {
+        if (_data.ownerClientID == NetworkManager.Instance.GetClientID())
+            return;
+
         if (_data.handType == 0)
         {
             leftHand.position = _data.position;
@@ -68,6 +71,7 @@ public class HandSynchronizer : MonoBehaviour
     private SMessageHand CreateMessageForHand(int _type)
     {
         SMessageHand message = new SMessageHand(_type, new List<SBone>(), _type == 0 ? leftHand.position : rightHand.position, _type == 0 ? leftHand.rotation : rightHand.rotation);
+        message.ownerClientID = NetworkManager.Instance.GetClientID();
         foreach (var bone in _type == 0 ? leftHandBones : rightHandBones)
         {
             message.bones.Add(new SBone(bone.Key, bone.Value.rotation));

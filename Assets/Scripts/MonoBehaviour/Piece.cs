@@ -1,48 +1,95 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Animations;
 
-public class Piece : MonoBehaviour
+public class Piece : SyncMonoBehaviour, IGrabbable
 {
     [Header("References")]
     [SerializeField] private GameObject model;
+    [SerializeField] private PositionConstraint constraint;
+    [SerializeField] private MeshRenderer meshRenderer;
 
     [Header("Settings")]
+    [SerializeField] private Color grabbedColor;
+    [SerializeField] private Color ungrabbedColor;
     [SerializeField] private float followSmoothiness = 0.2f;
     [SerializeField] private Vector3 sphereOffset = new Vector3(0f, -0.7f, 0f);
 
-    private Vector3 originalPos;
-    private Quaternion originalRot;
+    private Transform pinchTransform;
 
 
-    // Start is called before the first frame update
-    void Start()
-    {
-    }
-
-    // Update is called once per frame
-    public void StopPhysics()
+    private void StopPhysics()
     {
         model.GetComponent<Rigidbody>().isKinematic = true;
     }
 
-    public void ResumePhysics()
+    private void ResumePhysics()
     {
         model.GetComponent<Rigidbody>().isKinematic = false;
     }
 
-    public void FollowPinch(Vector3 _pos)
+    private void FollowPinch(Vector3 _pos)
     {
         Vector3 velocity = Vector3.zero;
-        Vector3 targetPos = _pos + sphereOffset; 
+        Vector3 targetPos = _pos + sphereOffset;
         Vector3 meToTargetVector = _pos - model.transform.position;
         model.transform.rotation = Quaternion.FromToRotation(Vector3.up, meToTargetVector);
         model.transform.position = Vector3.SmoothDamp(model.transform.position, targetPos, ref velocity, followSmoothiness);
     }
 
-    public void SetModel(GameObject _model)
+    public void AttachModel(GameObject _model)
     {
-        model = Instantiate(_model, transform.position, Quaternion.identity);
-        GetComponent<GrabSphere>().SetConstraint(model.transform);
+        model = _model;
+
+        var source = new ConstraintSource
+        {
+            sourceTransform = model.transform,
+            weight = 1
+        };
+
+        constraint.AddSource(source);
+    }
+
+    public void StartGrab()
+    {
+        NetworkManager.Instance.SendNetworkMessageToServer(new SNetworkMessage(EMessageType.Grab, GUID));
+    }
+
+    public void Grab()
+    {
+        constraint.enabled = false;
+        StopPhysics();
+        meshRenderer.material.SetColor("_BaseColor", grabbedColor);
+        Debug.Log($"{gameObject.name} is grabbed", this);
+    }
+
+    public void SyncUpGrab(Vector3 _pos)
+    {
+        NetworkManager.Instance.SendNetworkMessageToServer(new SNetworkMessage(EMessageType.UpdateGrab, JsonUtility.ToJson(new SMessaveVector3(GUID, _pos))));
+    }
+
+    public void SyncDownGrab(Vector3 _pos)
+    {
+        transform.position = _pos;
+        FollowPinch(_pos);
+    }
+
+    public void StopGrab()
+    {
+        NetworkManager.Instance.SendNetworkMessageToServer(new SNetworkMessage(EMessageType.Ungrab, GUID));
+    }
+
+    public void UnGrab()
+    {
+        constraint.enabled = true;
+        ResumePhysics();
+        meshRenderer.material.SetColor("_BaseColor", ungrabbedColor);
+        Debug.Log($"{gameObject.name} is ungrabbed", this);
+    }
+
+    public override void SyncTransform(Vector3 _position, Quaternion _rotation, Vector3 _scale)
+    {
+        base.SyncTransform(_position, _rotation, _scale);
     }
 }

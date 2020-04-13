@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 3107976326670808873}
   - component: {fileID: 5435922561354187845}
   - component: {fileID: 5435922561354187867}
-  - component: {fileID: 3107976326670808872}
   - component: {fileID: 7832455969791956257}
   m_Layer: 0
   m_Name: Piece
@@ -65,24 +64,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   GUID: 09a65568-20a7-4549-b8cc-a2ae37453281
-  piece: {fileID: 3107976326670808872}
+  model: {fileID: 0}
   constraint: {fileID: 5435922561354187845}
   meshRenderer: {fileID: 6931593410145052153}
   grabbedColor: {r: 0.2509804, g: 0.5019608, b: 0.27491924, a: 0.2}
   ungrabbedColor: {r: 0.5, g: 0.5, b: 0.5, a: 0.2}
---- !u!114 &3107976326670808872
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3107976326670808878}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5f2a81b27f5f8543b9126e19cf51347, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  model: {fileID: 0}
   followSmoothiness: 0.05
   sphereOffset: {x: 0, y: -0.07, z: 0}
 --- !u!135 &7832455969791956257

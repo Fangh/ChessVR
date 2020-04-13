@@ -33,36 +33,57 @@ public class PiecesSpawner : MonoBehaviour
 
     private void InitPieces()
     {
-        SpawnPieces(bottomLeftP1);
-        SpawnPieces(bottomLeftP2);
+        SpawnPieces(bottomLeftP1, false);
+        SpawnPieces(bottomLeftP2, true);
     }
 
-    private void SpawnPieces(Transform _bottomLeft)
+    private void SpawnPieces(Transform _bottomLeft, bool invert)
     {
         for (int y = 0; y < 2; y++)
         {
             for (int x = 0; x < 8; x++)
             {
-                Vector3 position = new Vector3(_bottomLeft.position.x + tileSize * 0.5f + tileSize * x, _bottomLeft.position.y, _bottomLeft.position.z + tileSize * 0.5f + tileSize * y);
+                Vector3 position;
+                if (!invert)
+                {
+                    position = new Vector3(_bottomLeft.position.x + tileSize * 0.5f + tileSize * x, _bottomLeft.position.y, _bottomLeft.position.z + tileSize * 0.5f + tileSize * y);
+                }
+                else
+                {
+                    position = new Vector3(_bottomLeft.position.x - tileSize * 0.5f - tileSize * x, _bottomLeft.position.y, _bottomLeft.position.z - tileSize * 0.5f - tileSize * y);
+                }
                 NetworkManager.Instance.Instantiate(piecePrefab.name, position, Quaternion.identity, _bottomLeft.name);
             }
         }
     }
 
-    int index = 0;
-    private void ConfigurePiece(GameObject piece)
+    int pieceIndex = 0;
+    int modelIndex = 0;
+    private void ConfigurePiece(GameObject instance)
     {
-        if (index < 16)
+        if (instance.GetComponent<Piece>() != null)
         {
-            piece.GetComponent<Piece>().SetModel(whiteModels.Find(w => w.index == index).model);
-            piece.name = $"Piece.{whiteModels.Find(w => w.index == index).model.name}";
+            if (pieceIndex < 16)
+            {
+                string modelName = whiteModels.Find(w => w.index == pieceIndex).model.name;
+                NetworkManager.Instance.Instantiate($"PieceModels/{modelName}", instance.transform.position, Quaternion.identity, null);
+                instance.name = $"Piece.{pieceIndex}";
+            }
+            else
+            {
+                string modelName = blackModels.Find(b => b.index == pieceIndex).model.name;
+                NetworkManager.Instance.Instantiate($"PieceModels/{modelName}", instance.transform.position, Quaternion.identity, null);
+                instance.name = $"Piece.{pieceIndex}";
+            }
+            pieceIndex++;
         }
-        else
+        else if(instance.GetComponent<PieceModel>() != null)
         {
-            piece.GetComponent<Piece>().SetModel(blackModels.Find(b => b.index == index).model);
-            piece.name = $"Piece.{blackModels.Find(b => b.index == index).model.name}";
+            instance.name = $"PieceModel.{modelIndex}";
+            instance.GetComponent<PieceModel>().AttachToPiece(GameObject.Find($"Piece.{modelIndex}").GetComponent<Piece>());
+            modelIndex++;
         }
-        index++;
+
     }
 }
 

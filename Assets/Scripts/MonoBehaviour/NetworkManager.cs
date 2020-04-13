@@ -156,16 +156,16 @@ public class NetworkManager : MonoBehaviour
         //only for Chess
         if(_message.type == EMessageType.Grab)
         {
-            NetworkSynchronizer.Instance.GetSMBByGUID(_message.JSON).GetComponent<GrabSphere>().Grab();
+            NetworkSynchronizer.Instance.GetSMBByGUID(_message.JSON).GetComponent<Piece>().Grab();
         }
         if (_message.type == EMessageType.Ungrab)
         {
-            NetworkSynchronizer.Instance.GetSMBByGUID(_message.JSON).GetComponent<GrabSphere>().UnGrab();
+            NetworkSynchronizer.Instance.GetSMBByGUID(_message.JSON).GetComponent<Piece>().UnGrab();
         }
         if (_message.type == EMessageType.UpdateGrab)
         {
             SMessaveVector3 msg = JsonUtility.FromJson<SMessaveVector3>(_message.JSON);
-            NetworkSynchronizer.Instance.GetSMBByGUID(msg.GUID).GetComponent<GrabSphere>().SyncDownGrab(msg.vector);
+            NetworkSynchronizer.Instance.GetSMBByGUID(msg.GUID).GetComponent<Piece>().SyncDownGrab(msg.vector);
         }
     }
 
@@ -204,8 +204,13 @@ public class NetworkManager : MonoBehaviour
         }
 
         Debug.Log($"Instantiating {_prefabName} under {_parentName} at ({_position}), {_rotation}");
+        Transform parent = null;
+        if(!string.IsNullOrEmpty(_parentName))
+        {
+            parent = GameObject.Find(_parentName).transform;
+        }
 
-        GameObject instance = Instantiate(Resources.Load<GameObject>(_prefabName), _position, _rotation, GameObject.Find(_parentName).transform) as GameObject;
+        GameObject instance = Instantiate(Resources.Load<GameObject>(_prefabName), _position, _rotation, parent) as GameObject;
         SyncMonoBehaviour SMB = instance.GetComponent<SyncMonoBehaviour>();
         SMB.InitializeGUIDFromServer(_GUID);
         NetworkSynchronizer.Instance.AddSynchronizeObject(SMB);

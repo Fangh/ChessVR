@@ -20,8 +20,11 @@ public class SyncMonoBehaviour : MonoBehaviour, ITransformSync
     //only for object created through the editor;
     void Reset()
     {
-        GUID = Guid.NewGuid().ToString();
-        Debug.Log($"Setting GUID({GUID}) to {name}");
+        if(string.IsNullOrEmpty(GUID))
+        {
+            GUID = Guid.NewGuid().ToString();
+            Debug.Log($"Setting GUID({GUID}) to {name}");
+        }
     }
 
     public void InitializeMyGUID(string _GUID)

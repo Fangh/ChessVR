@@ -4,12 +4,27 @@ using UnityEngine;
 
 public class SyncMonoBehaviour : MonoBehaviour, ITransformSync
 {
-    public string GUID;
+    public string GUID
+    {
+        get { return guid;  }
+        private set { guid = value; }
+    }
+
+    private string guid;
     private float timeSinceLastSyncDown;
     private Vector3 lastPos;
     private Quaternion lastRot;
     private Vector3 lastScale;
 
+    private void Start()
+    {
+        GUID = GetInstanceID().ToString();
+    }
+
+    public void InitializeMyGUID(string _GUID)
+    {
+        GUID = _GUID;
+    }
 
     public virtual void SyncTransform(Vector3 _position, Quaternion _rotation, Vector3 _scale)
     {

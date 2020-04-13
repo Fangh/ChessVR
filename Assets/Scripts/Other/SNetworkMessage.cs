@@ -31,15 +31,15 @@ public struct SMessageInstantiate
     public string prefabName;
     public Vector3 position;
     public Quaternion rotation;
-    public Transform parent;
+    public string parentName; //should be a unique name of a unique gameObject in the scene
 
-    public SMessageInstantiate(string _prefabName, Vector3 _position, Quaternion _rotation, Transform _parent)
+    public SMessageInstantiate(string _prefabName, Vector3 _position, Quaternion _rotation, string _parentName)
     {
         GUID = null;
         prefabName = _prefabName;
         position = _position;
         rotation = _rotation;
-        parent = _parent;
+        parentName = _parentName;
     }
 }
 

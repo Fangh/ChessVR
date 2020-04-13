@@ -136,7 +136,7 @@ public class NetworkManager : MonoBehaviour
         if (_message.type == EMessageType.Instantiate)
         {
             SMessageInstantiate msg = JsonUtility.FromJson<SMessageInstantiate>(_message.JSON);
-            InstantiateSyncObject(msg.prefabName, msg.GUID, msg.position, msg.rotation, msg.parent);
+            InstantiateSyncObject(msg.prefabName, msg.GUID, msg.position, msg.rotation, msg.parentName);
             return;
         }
 
@@ -169,7 +169,7 @@ public class NetworkManager : MonoBehaviour
     /// <summary>
     /// Called by the server on the clients to instantiate a Synchronized GameObject
     /// </summary>
-    private void InstantiateSyncObject(string _prefabName, string _GUID, Vector3 _position, Quaternion _rotation, Transform _parent = null)
+    private void InstantiateSyncObject(string _prefabName, string _GUID, Vector3 _position, Quaternion _rotation, string _parentName = null)
     {
         if (string.IsNullOrEmpty(_GUID))
         {
@@ -182,9 +182,9 @@ public class NetworkManager : MonoBehaviour
             return;
         }
 
-        Debug.Log($"Instantiating {_prefabName} under {_parent.name} at ({_position}), {_rotation}");
+        Debug.Log($"Instantiating {_prefabName} under {_parentName} at ({_position}), {_rotation}");
 
-        GameObject instance = Instantiate(Resources.Load<GameObject>(_prefabName), _position, _rotation, _parent) as GameObject;
+        GameObject instance = Instantiate(Resources.Load<GameObject>(_prefabName), _position, _rotation, GameObject.Find(_parentName).transform) as GameObject;
         SyncMonoBehaviour SMB = instance.GetComponent<SyncMonoBehaviour>();
         SMB.InitializeGUIDFromServer(_GUID);
         NetworkSynchronizer.Instance.AddSynchronizeObject(SMB);
@@ -205,10 +205,10 @@ public class NetworkManager : MonoBehaviour
     /// <param name="_prefabName">The name of the prefab. It should be the exact name of the prefab file that is in the Resource folder.</param>
     /// <param name="_position">The world pos of the instantiated GameObject</param>
     /// <param name="_rotation">The world rotation of the instantiated GameObject</param>
-    /// <param name="_parent">The parent of the instantiated GameObject, can be null</param>
-    public void Instantiate(string _prefabName, Vector3 _position, Quaternion _rotation, Transform _parent)
+    /// <param name="_parentName">The parent of the instantiated GameObject, can be null</param>
+    public void Instantiate(string _prefabName, Vector3 _position, Quaternion _rotation, string _parentName)
     {
-        SendNetworkMessageToServer(new SNetworkMessage(EMessageType.Instantiate, JsonUtility.ToJson(new SMessageInstantiate(_prefabName, _position, _rotation, _parent))));
+        SendNetworkMessageToServer(new SNetworkMessage(EMessageType.Instantiate, JsonUtility.ToJson(new SMessageInstantiate(_prefabName, _position, _rotation, _parentName))));
     }
 
     [ContextMenu("Start Server")]

@@ -44,7 +44,7 @@ public class PiecesSpawner : MonoBehaviour
             for (int x = 0; x < 8; x++)
             {
                 Vector3 position = new Vector3(_bottomLeft.position.x + tileSize * 0.5f + tileSize * x, _bottomLeft.position.y, _bottomLeft.position.z + tileSize * 0.5f + tileSize * y);
-                NetworkManager.Instance.Instantiate(piecePrefab.name, position, Quaternion.identity, _bottomLeft);
+                NetworkManager.Instance.Instantiate(piecePrefab.name, position, Quaternion.identity, _bottomLeft.name);
             }
         }
     }

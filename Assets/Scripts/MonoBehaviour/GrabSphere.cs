@@ -54,8 +54,8 @@ public class GrabSphere : SyncMonoBehaviour, IGrabbable
         constraint.enabled = false;
         piece.StopPhysics();
         base.SyncTransform(_position, _rotation, _scale);
-        constraint.enabled = true;
-        piece.ResumePhysics();
+        //constraint.enabled = true;
+        //piece.ResumePhysics();
     }
 
 }

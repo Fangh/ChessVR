@@ -176,16 +176,18 @@ public class NetworkManager : MonoBehaviour
         }
 
         GameObject instance = Instantiate(Resources.Load<GameObject>(_prefabName), _position, _rotation, _parent) as GameObject;
-        SyncMonoBehaviour synchro = instance.GetComponent<SyncMonoBehaviour>();
+        SyncMonoBehaviour SMB = instance.GetComponent<SyncMonoBehaviour>();
 
-        if (synchro == null)
+        if (SMB == null)
         {
             Debug.LogError("You tried to instantiate a prefab which does not have a SyncMonoBehaviour");
             Destroy(instance);
             return;
         }
 
-        synchro.GUID = _GUID;
+        SMB.GUID = _GUID;
+
+        NetworkSynchronizer.Instance.AddSynchronizeObject(SMB);
     }
 
     /// <summary>

@@ -5,13 +5,7 @@ using UnityEngine;
 
 public class SyncMonoBehaviour : MonoBehaviour, ITransformSync
 {
-    public string GUID
-    {
-        get { return guid;  }
-        private set { guid = value; }
-    }
-
-    private string guid;
+    public string GUID;
     private float timeSinceLastSyncDown;
     private Vector3 lastPos;
     private Quaternion lastRot;
@@ -27,7 +21,7 @@ public class SyncMonoBehaviour : MonoBehaviour, ITransformSync
         }
     }
 
-    public void InitializeMyGUID(string _GUID)
+    public void InitializeGUIDFromServer(string _GUID)
     {
         GUID = _GUID;
     }

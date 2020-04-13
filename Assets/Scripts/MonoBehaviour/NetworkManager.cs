@@ -187,7 +187,7 @@ public class NetworkManager : MonoBehaviour
             return;
         }
 
-        SMB.InitializeMyGUID(_GUID);
+        SMB.InitializeGUIDFromServer(_GUID);
 
         NetworkSynchronizer.Instance.AddSynchronizeObject(SMB);
     }

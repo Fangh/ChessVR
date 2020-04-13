@@ -16,7 +16,7 @@ public class SyncMonoBehaviour : MonoBehaviour, ITransformSync
     private Quaternion lastRot;
     private Vector3 lastScale;
 
-    private void Start()
+    private void Awake()
     {
         GUID = GetInstanceID().ToString();
     }

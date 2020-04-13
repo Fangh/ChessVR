@@ -20,13 +20,14 @@ public class NetworkSynchronizer : MonoBehaviour
     {
         foreach (SyncMonoBehaviour SMB in FindObjectsOfType<SyncMonoBehaviour>())
         {
-            synchronizedObjects.Add(SMB.GUID, SMB);
+            AddSynchronizeObject(SMB);
         }
     }
 
     public void AddSynchronizeObject(SyncMonoBehaviour _SMB)
     {
         synchronizedObjects.Add(_SMB.GUID, _SMB);
+        Debug.Log($"Adding {_SMB.name} ({_SMB.GUID}) to synchronized objects");
     }
 
     //Send to server an object that has moved

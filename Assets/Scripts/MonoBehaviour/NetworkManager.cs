@@ -182,6 +182,8 @@ public class NetworkManager : MonoBehaviour
             return;
         }
 
+        Debug.Log($"Instantiating {_prefabName} under {_parent.name} at ({_position}), {_rotation}");
+
         GameObject instance = Instantiate(Resources.Load<GameObject>(_prefabName), _position, _rotation, _parent) as GameObject;
         SyncMonoBehaviour SMB = instance.GetComponent<SyncMonoBehaviour>();
         SMB.InitializeGUIDFromServer(_GUID);

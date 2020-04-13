@@ -20,7 +20,15 @@ public class PiecesSpawner : MonoBehaviour
     void Start()
     {
         NetworkManager.OnInstantiate += ConfigurePiece;
-        NetworkManager.OnClientStarted += InitPieces;
+        //NetworkManager.OnClientStarted += InitPieces;
+    }
+
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            InitPieces();
+        }
     }
 
     private void InitPieces()

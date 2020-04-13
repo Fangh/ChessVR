@@ -8,18 +8,23 @@ public class GrabSphere : MonoBehaviour, IGrabbable
     [Header("References")]
     [SerializeField] private Piece piece;
     [SerializeField] private PositionConstraint constraint;
+    [SerializeField] private MeshRenderer meshRenderer;
 
     [Header("Settings")]
     [SerializeField] private Color grabbedColor;
     [SerializeField] private Color ungrabbedColor;
 
-    private MeshRenderer meshRenderer;
     private Transform pinchTransform;
 
-    // Start is called before the first frame update
-    void Start()
+    public void SetConstraint(Transform _model)
     {
-        meshRenderer = GetComponent<MeshRenderer>();
+        var source = new ConstraintSource
+        {
+            sourceTransform = _model,
+            weight = 1
+        };
+
+        constraint.AddSource(source);
     }
 
     public void Grab()
@@ -33,7 +38,7 @@ public class GrabSphere : MonoBehaviour, IGrabbable
     public void UpdateGrab(Vector3 _pos)
     {
         transform.position = _pos;
-        piece.FollowSphere(_pos);
+        piece.FollowPinch(_pos);
     }
 
     public void UnGrab()

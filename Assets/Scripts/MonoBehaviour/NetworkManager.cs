@@ -184,6 +184,8 @@ public class NetworkManager : MonoBehaviour
 
         GameObject instance = Instantiate(Resources.Load<GameObject>(_prefabName), _position, _rotation, _parent) as GameObject;
         SyncMonoBehaviour SMB = instance.GetComponent<SyncMonoBehaviour>();
+        SMB.InitializeGUIDFromServer(_GUID);
+        NetworkSynchronizer.Instance.AddSynchronizeObject(SMB);
 
         if (SMB == null)
         {
@@ -192,8 +194,6 @@ public class NetworkManager : MonoBehaviour
             return;
         }
 
-        SMB.InitializeGUIDFromServer(_GUID);
-        NetworkSynchronizer.Instance.AddSynchronizeObject(SMB);
         OnInstantiate?.Invoke(SMB.gameObject);
     }
 

@@ -5,7 +5,7 @@ using UnityEngine;
 public class Piece : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private Rigidbody rigidbody;
+    [SerializeField] private GameObject model;
 
     [Header("Settings")]
     [SerializeField] private float followSmoothiness = 0.2f;
@@ -18,36 +18,31 @@ public class Piece : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //originalPos = rigidbody.transform.localPosition;
-        //originalRot = rigidbody.transform.localRotation;
     }
 
     // Update is called once per frame
     public void StopPhysics()
     {
-        rigidbody.isKinematic = true;
-        //transform.localPosition = originalPos;
-        //transform.localRotation = originalRot;
+        model.GetComponent<Rigidbody>().isKinematic = true;
     }
 
     public void ResumePhysics()
     {
-        //originalPos = rigidbody.transform.localPosition;
-        //originalRot = rigidbody.transform.localRotation;
-        rigidbody.isKinematic = false;
+        model.GetComponent<Rigidbody>().isKinematic = false;
     }
 
-    public void FollowSphere(Vector3 _pos)
+    public void FollowPinch(Vector3 _pos)
     {
         Vector3 velocity = Vector3.zero;
         Vector3 targetPos = _pos + sphereOffset; 
-        Vector3 meToTargetVector = _pos - rigidbody.transform.position;
-        rigidbody.transform.rotation = Quaternion.FromToRotation(Vector3.up, meToTargetVector);
-        rigidbody.transform.position = Vector3.SmoothDamp(rigidbody.transform.position, targetPos, ref velocity, followSmoothiness);
+        Vector3 meToTargetVector = _pos - model.transform.position;
+        model.transform.rotation = Quaternion.FromToRotation(Vector3.up, meToTargetVector);
+        model.transform.position = Vector3.SmoothDamp(model.transform.position, targetPos, ref velocity, followSmoothiness);
     }
 
     public void SetModel(GameObject _model)
     {
-        Instantiate(_model, rigidbody.transform);
+        model = Instantiate(_model, transform.position, Quaternion.identity);
+        GetComponent<GrabSphere>().SetConstraint(model.transform);
     }
 }

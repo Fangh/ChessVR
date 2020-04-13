@@ -29,7 +29,6 @@ public class FingerTip : MonoBehaviour
         if (other.GetComponent<FingerInteractable>())
         {
             other.GetComponent<FingerInteractable>().OnFingerExit?.Invoke(finger);
-
         }
         else if (other.GetComponent<FingerTip>())
         {

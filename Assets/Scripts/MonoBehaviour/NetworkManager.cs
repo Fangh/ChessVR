@@ -21,7 +21,8 @@ public class NetworkManager : MonoBehaviour
     internal bool isServer = false;
     public static event Action<GameObject> OnInstantiate;
     public static event Action OnServerStarted;
-    public static event Action OnClientStarted;
+    public static event Action<int> OnNewClient;
+    public static event Action OnClientConnected;
 
     private int clientID = int.MinValue;
 
@@ -70,6 +71,7 @@ public class NetworkManager : MonoBehaviour
                     Debug.Log($"client {msg.connectionId} is Connected");
                     connectedClients.Add(msg.connectionId);
                     SendNetworkMessageToClient(msg.connectionId, new SNetworkMessage(EMessageType.ConnectionSuccessful, msg.connectionId.ToString()));
+                    OnNewClient?.Invoke(msg.connectionId);
                     break;
                 case Telepathy.EventType.Disconnected:
                     Debug.Log(msg.connectionId + " Disconnected");
@@ -121,8 +123,6 @@ public class NetworkManager : MonoBehaviour
             {
                 case Telepathy.EventType.Connected:
                     Debug.Log(msg.connectionId + " Connected");
-                    isConnected = true;
-                    OnClientStarted?.Invoke();
                     break;
                 case Telepathy.EventType.Disconnected:
                     Debug.Log(msg.connectionId + " Disconnected");
@@ -148,6 +148,8 @@ public class NetworkManager : MonoBehaviour
         {
             clientID = int.Parse(_message.JSON);
             Debug.Log($"The Server told me I'm client n°{clientID}");
+            OnClientConnected?.Invoke();
+            isConnected = true;
         }
 
         if (_message.type == EMessageType.Instantiate)
@@ -256,7 +258,7 @@ public class NetworkManager : MonoBehaviour
     public void StartServer()
     {
         server = new Telepathy.Server();
-        server.Start(4242);
+        server.Start(1337);
         isServer = true;
         OnServerStarted?.Invoke();
     }
@@ -265,8 +267,7 @@ public class NetworkManager : MonoBehaviour
     public void StartClient()
     {
         client = new Telepathy.Client();
-        client.Connect(serverIP, 4242);
-
+        client.Connect(serverIP, 1337);
     }
 
     public int GetClientID()
@@ -276,5 +277,10 @@ public class NetworkManager : MonoBehaviour
             Debug.LogError("You don't have a client ID given by the server !");
         }
         return clientID;
+    }
+
+    public int GetNumberOfConnectedClients()
+    {
+        return connectedClients.Count;
     }
 }

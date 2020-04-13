@@ -6,9 +6,14 @@ public class NetworkSynchronizer : MonoBehaviour
 {
     public float synchroTime = (1f / 30f);
 
+    [SerializeField] private HandSynchronizer playerHands;
+    [SerializeField] private HandSynchronizer otherPlayerHands;
+
     public static NetworkSynchronizer Instance;
 
     private Dictionary<string, SyncMonoBehaviour> synchronizedObjects = new Dictionary<string, SyncMonoBehaviour>();
+
+    private float currentSynchroTime = 0;
 
     private void Awake()
     {
@@ -18,9 +23,27 @@ public class NetworkSynchronizer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        currentSynchroTime = synchroTime;
+
         foreach (SyncMonoBehaviour SMB in FindObjectsOfType<SyncMonoBehaviour>())
         {
             AddSynchronizeObject(SMB);
+        }
+    }
+
+    private void Update()
+    {
+        if (!NetworkManager.Instance.isConnected)
+            return;
+
+        if(currentSynchroTime <= 0)
+        {
+            currentSynchroTime = synchroTime;
+            playerHands.SyncHandUp();
+        }
+        else
+        {
+            currentSynchroTime -= Time.deltaTime;
         }
     }
 
@@ -48,6 +71,12 @@ public class NetworkSynchronizer : MonoBehaviour
     public SyncMonoBehaviour GetSMBByGUID(string _GUID)
     {
         return synchronizedObjects[_GUID];
+    }
+
+
+    public void SyncHandsDown(SMessageHand _message)
+    {
+        otherPlayerHands.SyncHandDown(_message);
     }
 
 }

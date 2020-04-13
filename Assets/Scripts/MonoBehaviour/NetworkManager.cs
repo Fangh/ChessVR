@@ -17,7 +17,8 @@ public class NetworkManager : MonoBehaviour
 
     public static NetworkManager Instance;
 
-    public bool isServer = false;
+    internal bool isConnected = false;
+    internal bool isServer = false;
     public static event Action<GameObject> OnInstantiate;
     public static event Action OnServerStarted;
     public static event Action OnClientStarted;
@@ -102,7 +103,7 @@ public class NetworkManager : MonoBehaviour
         }
 
         //only for Chess
-        if(_message.type == EMessageType.Grab || _message.type == EMessageType.Ungrab || _message.type == EMessageType.UpdateGrab)
+        if(_message.type == EMessageType.Grab || _message.type == EMessageType.Ungrab || _message.type == EMessageType.UpdateGrab || _message.type == EMessageType.UpdateHand)
         {
             SendNetworkMessageToAllClients(_message);
         }
@@ -117,6 +118,7 @@ public class NetworkManager : MonoBehaviour
             {
                 case Telepathy.EventType.Connected:
                     Debug.Log(msg.connectionId + " Connected");
+                    isConnected = true;
                     OnClientStarted?.Invoke();
                     break;
                 case Telepathy.EventType.Disconnected:
@@ -164,8 +166,12 @@ public class NetworkManager : MonoBehaviour
         }
         if (_message.type == EMessageType.UpdateGrab)
         {
-            SMessaveVector3 msg = JsonUtility.FromJson<SMessaveVector3>(_message.JSON);
+            SMessageVector3 msg = JsonUtility.FromJson<SMessageVector3>(_message.JSON);
             NetworkSynchronizer.Instance.GetSMBByGUID(msg.GUID).GetComponent<Piece>().SyncDownGrab(msg.vector);
+        }
+        if (_message.type == EMessageType.UpdateHand)
+        {
+            NetworkSynchronizer.Instance.SyncHandsDown(JsonUtility.FromJson<SMessageHand>(_message.JSON));
         }
     }
 

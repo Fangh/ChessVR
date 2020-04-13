@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public struct SNetworkMessage
 {
     public int clientID;
@@ -16,6 +17,8 @@ public struct SNetworkMessage
     }
 }
 
+
+[System.Serializable]
 public enum EMessageType
 {
     Unknown,
@@ -29,7 +32,7 @@ public enum EMessageType
     UpdateHand,
 }
 
-
+[System.Serializable]
 public struct SMessageInstantiate
 {
     public string GUID;
@@ -48,6 +51,7 @@ public struct SMessageInstantiate
     }
 }
 
+[System.Serializable]
 public struct SMessageUpdateTransform
 {
     public string GUID;
@@ -64,15 +68,45 @@ public struct SMessageUpdateTransform
     }
 }
 
-public struct SMessaveVector3
+[System.Serializable]
+public struct SMessageVector3
 {
     public string GUID;
     public Vector3 vector;
 
-    public SMessaveVector3(string _GUID, Vector3 _vector)
+    public SMessageVector3(string _GUID, Vector3 _vector)
     {
         GUID = _GUID;
         vector = _vector;
     }
 }
 
+[System.Serializable]
+public struct SMessageHand
+{
+    public int handType; //0 = left, 1 = right
+    public List<SBone> bones;
+    public Vector3 position;
+    public Quaternion rotation;
+
+    public SMessageHand(int _handType, List<SBone> _bones, Vector3 _pos, Quaternion _rot)
+    {
+        handType = _handType;
+        bones = _bones;
+        position = _pos;
+        rotation = _rot;
+    }
+}
+
+[System.Serializable]
+public struct SBone
+{
+    public string name;
+    public Quaternion rotation;
+
+    public SBone(string _str, Quaternion _v)
+    {
+        name = _str;
+        rotation = _v;
+    }
+}

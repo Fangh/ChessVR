@@ -66,7 +66,7 @@ public class Piece : SyncMonoBehaviour, IGrabbable
 
     public void SyncUpGrab(Vector3 _pos)
     {
-        NetworkManager.Instance.SendNetworkMessageToServer(new SNetworkMessage(EMessageType.UpdateGrab, JsonUtility.ToJson(new SMessaveVector3(GUID, _pos))));
+        NetworkManager.Instance.SendNetworkMessageToServer(new SNetworkMessage(EMessageType.UpdateGrab, JsonUtility.ToJson(new SMessageVector3(GUID, _pos))));
     }
 
     public void SyncDownGrab(Vector3 _pos)

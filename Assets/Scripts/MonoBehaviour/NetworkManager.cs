@@ -94,6 +94,11 @@ public class NetworkManager : MonoBehaviour
             msg.GUID = Guid.NewGuid().ToString();
             SendNetworkMessageToAllClients(new SNetworkMessage(EMessageType.Instantiate, JsonUtility.ToJson(msg)));
         }
+        
+        if(_message.type == EMessageType.UpdateTransform)
+        {
+            SendNetworkMessageToAllClients(_message);
+        }
     }
 
     private void ReceiveClientMessages()

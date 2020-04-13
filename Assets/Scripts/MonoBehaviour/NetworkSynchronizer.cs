@@ -24,6 +24,11 @@ public class NetworkSynchronizer : MonoBehaviour
         }
     }
 
+    public void AddSynchronizeObject(SyncMonoBehaviour _SMB)
+    {
+        synchronizedObjects.Add(_SMB.GUID, _SMB);
+    }
+
     //Send to server an object that has moved
     public void SyncUp(SyncMonoBehaviour SMB)
     {

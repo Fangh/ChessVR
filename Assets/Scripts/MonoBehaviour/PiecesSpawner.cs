@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -20,12 +21,12 @@ public class PiecesSpawner : MonoBehaviour
     void Start()
     {
         NetworkManager.OnInstantiate += ConfigurePiece;
-        //NetworkManager.OnClientStarted += InitPieces;
+        NetworkManager.OnNewClient += LookFor2Players;
     }
 
-    private void Update()
+    private void LookFor2Players(int _connectionID)
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if(NetworkManager.Instance.GetNumberOfConnectedClients() >= 2)
         {
             InitPieces();
         }

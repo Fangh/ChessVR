@@ -8,6 +8,7 @@ public class NetworkManager : MonoBehaviour
 {
     [Header("Settings")]
     [SerializeField] private string serverIP = "127.0.0.1";
+    [SerializeField] private int port = 424242;
 
     private Telepathy.Server server;
     private Telepathy.Client client;
@@ -258,7 +259,7 @@ public class NetworkManager : MonoBehaviour
     public void StartServer()
     {
         server = new Telepathy.Server();
-        server.Start(1337);
+        server.Start(port);
         isServer = true;
         OnServerStarted?.Invoke();
     }
@@ -267,7 +268,16 @@ public class NetworkManager : MonoBehaviour
     public void StartClient()
     {
         client = new Telepathy.Client();
-        client.Connect(serverIP, 1337);
+        client.Connect(serverIP, port);
+    }
+
+    public void StartClient(TMPro.TextMeshProUGUI TMP)
+    {
+        client = new Telepathy.Client();
+        if (string.IsNullOrEmpty(TMP.text))
+            client.Connect(serverIP, port);
+        else
+            client.Connect(TMP.text, port);
     }
 
     public int GetClientID()

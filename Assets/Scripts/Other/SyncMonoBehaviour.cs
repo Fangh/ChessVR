@@ -23,7 +23,7 @@ public class SyncMonoBehaviour : MonoBehaviour, ITransformSync
         }
     }
 
-    public void InitializeGUIDFromServer(string _GUID)
+    public void InitializeGUID(string _GUID)
     {
         GUID = _GUID;
     }

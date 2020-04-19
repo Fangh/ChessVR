@@ -81,7 +81,7 @@ public class NetworkManager : MonoBehaviour
                 case Telepathy.EventType.Data:
                     SNetworkMessage netMsg = JsonUtility.FromJson<SNetworkMessage>(Encoding.UTF8.GetString(msg.data));
                     netMsg.clientID = msg.connectionId;
-                    Debug.Log($"client({msg.connectionId} has send a {netMsg.type} message.");
+                    //Debug.Log($"client({msg.connectionId}) has send a {netMsg.type} message.");
                     SortServerMessages(netMsg);
                     break;
             }
@@ -100,6 +100,7 @@ public class NetworkManager : MonoBehaviour
         {
             SMessageInstantiate msg = JsonUtility.FromJson<SMessageInstantiate>(_message.JSON);
             msg.GUID = Guid.NewGuid().ToString();
+            Debug.Log($"Client {_message.clientID} asked the Server to spawn {msg.prefabName} and register GUID({msg.GUID}) for everyone.");
             SendNetworkMessageToAllClients(new SNetworkMessage(EMessageType.Instantiate, JsonUtility.ToJson(msg)));
         }
 
@@ -130,7 +131,7 @@ public class NetworkManager : MonoBehaviour
                     break;
                 case Telepathy.EventType.Data:
                     SNetworkMessage netMsg = JsonUtility.FromJson<SNetworkMessage>(Encoding.UTF8.GetString(msg.data));
-                    Debug.Log($"server has send a {netMsg.type} message.");
+                    //Debug.Log($"server has send a {netMsg.type} message.");
                     SortClientMessages(netMsg);
                     break;
             }
@@ -221,7 +222,6 @@ public class NetworkManager : MonoBehaviour
             return;
         }
 
-        Debug.Log($"Instantiating {_prefabName} under {_parentName} at ({_position}), {_rotation}");
         Transform parent = null;
         if (!string.IsNullOrEmpty(_parentName))
         {
@@ -230,8 +230,9 @@ public class NetworkManager : MonoBehaviour
 
         GameObject instance = Instantiate(Resources.Load<GameObject>(_prefabName), _position, _rotation, parent) as GameObject;
         SyncMonoBehaviour SMB = instance.GetComponent<SyncMonoBehaviour>();
-        SMB.InitializeGUIDFromServer(_GUID);
+        SMB.InitializeGUID(_GUID);
         NetworkSynchronizer.Instance.AddSynchronizeObject(SMB);
+        Debug.Log($"Instantiating {_prefabName} under {_parentName} at ({_position}), {_rotation} with GUID({_GUID})", instance);
 
         if (SMB == null)
         {

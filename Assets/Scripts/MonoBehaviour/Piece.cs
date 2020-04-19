@@ -48,6 +48,8 @@ public class Piece : SyncMonoBehaviour, IGrabbable
             weight = 1
         };
 
+        Debug.Log($"{name}: Attaching {_model.name}", this);
+
         constraint.AddSource(source);
     }
 

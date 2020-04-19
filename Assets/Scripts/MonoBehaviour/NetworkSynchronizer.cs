@@ -50,7 +50,7 @@ public class NetworkSynchronizer : MonoBehaviour
     public void AddSynchronizeObject(SyncMonoBehaviour _SMB)
     {
         synchronizedObjects.Add(_SMB.GUID, _SMB);
-        Debug.Log($"Adding {_SMB.name} ({_SMB.GUID}) to synchronized objects");
+        Debug.Log($"Adding {_SMB.name} ({_SMB.GUID}) to synchronized objects", _SMB);
     }
 
     //Send to server an object that has moved

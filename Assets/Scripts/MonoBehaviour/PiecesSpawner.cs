@@ -62,19 +62,21 @@ public class PiecesSpawner : MonoBehaviour
     int modelIndex = 0;
     private void ConfigurePiece(GameObject instance)
     {
-        if (instance.GetComponent<Piece>() != null)
+        if (NetworkManager.Instance.GetClientID() == 1 && instance.GetComponent<Piece>() != null)
         {
             if (pieceIndex < 16)
             {
                 string modelName = whiteModels.Find(w => w.index == pieceIndex).model.name;
                 NetworkManager.Instance.Instantiate($"PieceModels/{modelName}", instance.transform.position, Quaternion.identity, null);
                 instance.name = $"Piece.{pieceIndex}";
+                Debug.Log($"{instance.name} is spawned. Spawnwing a {modelName} for it.", instance);
             }
             else
             {
                 string modelName = blackModels.Find(b => b.index == pieceIndex).model.name;
                 NetworkManager.Instance.Instantiate($"PieceModels/{modelName}", instance.transform.position, Quaternion.identity, null);
                 instance.name = $"Piece.{pieceIndex}";
+                Debug.Log($"{instance.name} is spawned. Spawnwing a {modelName} for it.", instance);
             }
             pieceIndex++;
         }

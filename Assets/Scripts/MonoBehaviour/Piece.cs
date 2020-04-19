@@ -12,12 +12,16 @@ public class Piece : SyncMonoBehaviour, IGrabbable
 
     [Header("Settings")]
     [SerializeField] private Color grabbedColor;
-    [SerializeField] private Color ungrabbedColor;
     [SerializeField] private float followSmoothiness = 0.2f;
     [SerializeField] private Vector3 sphereOffset = new Vector3(0f, -0.7f, 0f);
 
+    internal Color ungrabbedColor;
     private Transform pinchTransform;
 
+    private void Start()
+    {
+        meshRenderer.material.SetColor("_BaseColor", ungrabbedColor);
+    }
 
     private void StopPhysics()
     {

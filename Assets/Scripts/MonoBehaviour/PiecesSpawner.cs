@@ -13,6 +13,10 @@ public class PiecesSpawner : MonoBehaviour
     [SerializeField] private List<ModelByIndex> whiteModels = new List<ModelByIndex>();
     [SerializeField] private List<ModelByIndex> blackModels = new List<ModelByIndex>();
 
+    [Header("Settings")]
+    [SerializeField] private Color whiteSphereColor;
+    [SerializeField] private Color blackSphereColor;
+
     private List<Piece> whitePieces = new List<Piece>();
     private List<Piece> blackPieces = new List<Piece>();
 
@@ -68,6 +72,7 @@ public class PiecesSpawner : MonoBehaviour
             {
                 string modelName = whiteModels.Find(w => w.index == pieceIndex).model.name;
                 instance.name = $"Piece.{pieceIndex}";
+                instance.GetComponent<Piece>().ungrabbedColor = whiteSphereColor;
                 Debug.Log($"{instance.name} is spawned. Spawnwing a {modelName} for it.", instance);
 
                 if(NetworkManager.Instance.GetClientID() == 1)
@@ -77,6 +82,7 @@ public class PiecesSpawner : MonoBehaviour
             {
                 string modelName = blackModels.Find(b => b.index == pieceIndex).model.name;
                 instance.name = $"Piece.{pieceIndex}";
+                instance.GetComponent<Piece>().ungrabbedColor = blackSphereColor;
                 Debug.Log($"{instance.name} is spawned. Spawnwing a {modelName} for it.", instance);
 
                 if (NetworkManager.Instance.GetClientID() == 1)

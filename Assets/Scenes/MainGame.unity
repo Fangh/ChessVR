@@ -6416,6 +6416,8 @@ MonoBehaviour:
     model: {fileID: 4488269874287638444, guid: 8f0814cc55e84da47bfea2a6ad4ac334, type: 3}
   - index: 31
     model: {fileID: 4488269874287638444, guid: 8f0814cc55e84da47bfea2a6ad4ac334, type: 3}
+  whiteSphereColor: {r: 0.6, g: 0.6, b: 0.6, a: 0.5019608}
+  blackSphereColor: {r: 0.3, g: 0.3, b: 0.3, a: 0.5019608}
 --- !u!4 &2053152860
 Transform:
   m_ObjectHideFlags: 0
